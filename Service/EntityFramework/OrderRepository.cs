@@ -1,4 +1,5 @@
 ﻿using DeliveryServiceFiltersOrders.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryServiceFiltersOrders.Service.EntityFramework
 {
@@ -11,7 +12,7 @@ namespace DeliveryServiceFiltersOrders.Service.EntityFramework
             _context = context;
         }
 
-        public IEnumerable<Order> GetFilteredOrders(string district, DateTime fromTime, DateTime toTime, int minOrdersInDistrict)
+        public async Task<IEnumerable<Order>> GetFilteredOrdersAsync(string district, DateTime fromTime, DateTime toTime, int minOrdersInDistrict)
         {
             var districtOrderCount = _context.Orders
                 .Count(o => o.District == district);
@@ -19,12 +20,12 @@ namespace DeliveryServiceFiltersOrders.Service.EntityFramework
             if (districtOrderCount < minOrdersInDistrict)
                 return Enumerable.Empty<Order>();
 
-            return _context.Orders
+            return await _context.Orders
                 .Where(o => o.District == district && o.DeliveryTime >= fromTime && o.DeliveryTime <= toTime)
-                .ToList();
+                .ToListAsync();
         }
 
-        public async Task ImportOrdersFromCsv(string filePath)
+        public async Task ImportOrdersFromCsvAsync(string filePath)
         {
             var lines = File.ReadAllLines(filePath);
 
