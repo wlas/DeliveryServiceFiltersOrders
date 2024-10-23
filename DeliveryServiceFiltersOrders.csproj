@@ -22,9 +22,13 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Logs\log_output.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\orders.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
