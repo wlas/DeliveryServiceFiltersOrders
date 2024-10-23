@@ -1,6 +1,7 @@
 ﻿using DeliveryServiceFiltersOrders;
 using DeliveryServiceFiltersOrders.Service;
 using DeliveryServiceFiltersOrders.Service.EntityFramework;
+using DeliveryServiceFiltersOrders.Utils;
 
 string logFileOutput = @"Logs\log_output.log";
 
@@ -50,6 +51,17 @@ try
 
     if (filteredOrders.Any())
     {
+        try
+        {
+            var nameFile = @"Resources\" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + ".txt";
+            WriteToFile.WriteResults(nameFile, filteredOrders.ToList());
+            message($"Результаты фильтрации успешно записаны в файл. {Path.Combine(Environment.CurrentDirectory, nameFile)}");
+        }
+        catch (Exception ex)
+        {
+            message($"Ошибка: {ex.Message}");
+        }
+
         LogService.Log($"Найдены следующие заказы по фильтру: Район - {district}, Начальное время - {fromTime}, Конечное время - {toTime}");
 
         foreach (var order in filteredOrders)
@@ -77,5 +89,8 @@ void message(string msg)
 {
     LogService.Log(msg);
     Console.WriteLine(msg);
-    Console.ReadKey(true);
+    Console.WriteLine("Нажмите любую клавишу, чтобы продолжить.");
+    Console.ReadKey();
+    
+    
 }
